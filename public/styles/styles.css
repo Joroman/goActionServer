@@ -1,0 +1,42 @@
+
+.navbar { 
+    background: #07689F;
+   }
+
+.color1{
+    color:#07689F;
+}
+.color2{
+    color:#A2D5F2;
+}
+.color3{
+    color:#FF7E67;
+}
+
+.background4{
+    background:#FAFAFA;
+}
+
+.background3{
+    background:#FF7E67;
+}
+.white{
+   color:#FFFFFF; 
+}
+.whiteb{
+    background:#FFFFFF;
+}
+#getStartForm{
+    background:#f5f5f5;
+}
+.fa-user{
+    color:#5bc0de;
+ }
+.fa-phone{
+    color:#5cb85c;
+ }
+.fa-envelope{
+    color:#f0ad4e;
+}
+
+
