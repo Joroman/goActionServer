@@ -28,3 +28,6 @@ introduce de preivate key I generete with puttygen
 Branch master set up to track remote branch master from origin.
 To https://github.com/Joroman/goActionWebClient.git
  * [new branch]      master -> master
+
+
+ git push -u origin master
