@@ -1354,7 +1354,7 @@ angular.module('myApp')
 ;
 
 angular.module('myApp')
-  .constant("baseURL","http://localhost:3000/")
+  .constant("baseURL","http://localhost:8080/")
 
     .service('actionsService',['$resource','baseURL',function($resource,baseURL){
         this.getActions=function(){
