@@ -17,8 +17,7 @@ angular.module('myApp', ['ui.router','ngResource','nvd3',"chart.js",'ngDialog'])
                          controller  : 'HeaderController'
                     },
                     'content':{
-                        templateUrl :'views/active_actions.html',
-                        controller  :'ActionsController'
+                        templateUrl :'views/home.html'
                     }
                 }
             })
