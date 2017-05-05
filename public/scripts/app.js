@@ -1,12 +1,12 @@
 angular.module('myApp', ['ui.router','ngResource','nvd3',"chart.js",'ngDialog'])
     .config(['$stateProvider','$urlRouterProvider','ChartJsProvider',function($stateProvider, $urlRouterProvider,ChartJsProvider) {
-    
+
      // Configure all line charts
     ChartJsProvider.setOptions('line', {
       chartColors: ['#5cb85c','#FF7E67'],
       responsive: true
     });
-    
+
     // route for the home page
         $stateProvider
             .state('app', {
@@ -17,8 +17,8 @@ angular.module('myApp', ['ui.router','ngResource','nvd3',"chart.js",'ngDialog'])
                          controller  : 'HeaderController'
                     },
                     'content':{
-                        templateUrl :'views/active_actions.html',
-                        controller  :'ActionsController'
+                        templateUrl :'views/home.html',
+                        controller  :'HeaderController'
                     }
                 }
             })
@@ -31,7 +31,7 @@ angular.module('myApp', ['ui.router','ngResource','nvd3',"chart.js",'ngDialog'])
                     }
                 }
             })
-        
+
             .state ('app.getStartAction',{
                 url:'getStart',
                 views:{
@@ -41,7 +41,7 @@ angular.module('myApp', ['ui.router','ngResource','nvd3',"chart.js",'ngDialog'])
                     }
                 }
             })
-            
+
             .state('app.editAction',{
                 url:'defined/:id',
                 views:{
@@ -78,7 +78,7 @@ angular.module('myApp', ['ui.router','ngResource','nvd3',"chart.js",'ngDialog'])
                     }
                 }
             })
-        
+
           .state('app.closeActions',{
                 url:'close',
                 views:{
@@ -88,7 +88,7 @@ angular.module('myApp', ['ui.router','ngResource','nvd3',"chart.js",'ngDialog'])
                     }
                 }
             })
-            
+
             .state('app.closeActions.detail',{
                 url:'detail:id',
                 views:{
@@ -98,15 +98,15 @@ angular.module('myApp', ['ui.router','ngResource','nvd3',"chart.js",'ngDialog'])
                     }
                 }
             })
-            
-        
+
+
             .state('app.clients',{
                 url:'clients',
                 views:{
                     'content@':{
                         templateUrl :'views/clients.html',
                         controller  :'ClientsController'
-                    }   
+                    }
                 }
             })
             .state('app.clients.contacts',{
@@ -115,7 +115,7 @@ angular.module('myApp', ['ui.router','ngResource','nvd3',"chart.js",'ngDialog'])
                     'content@':{
                         templateUrl :'views/contacts.html',
                         controller  :'ContactsController'
-                    }   
+                    }
                 }
             })
             .state('app.sales',{
@@ -454,6 +454,7 @@ angular.module('myApp')
     .controller('GetStartController',['$scope','$state','actionsService','clientsService',function($scope,$state,actionsService,clientsService){
 
       $scope.action={name:"",description:"",_client: "",end_date:new Date(),start_date:new Date(),client_name:""};
+      $scope.getStart=true;
 
         $scope.save =function(){
             console.log("action");
@@ -464,18 +465,31 @@ angular.module('myApp')
             });
         };
 
+        $scope.clients=clientsService.getClients().query(function(res){
+            $scope.clients=res;
+            if($scope.clients.length>0)
+              $scope.getStart=true;
+            if($scope.clients.lenght<0)
+              $scope.getStart=false;
+        });
+
+
+
         //get all the clients and present to the modal
         $scope.getClients = function(){
             clientsService.getClients().query(function(res){
                 $scope.clients=res;
+
+                if($scope.clients.length>0)
+                  $scope.getStart=true;
             });
 
-        //Take the client selected form the modal
-        $scope.clientChose = function(client){
-            $scope.client=client;
-            $scope.action.client_name=client.company_name;
-            $scope.action._client=client._id;
-        };
+          //Take the client selected form the modal
+          $scope.clientChose = function(client){
+              $scope.client=client;
+              $scope.action.client_name=client.company_name;
+              $scope.action._client=client._id;
+          };
 
         };
 
@@ -488,9 +502,9 @@ angular.module('myApp')
         $scope.show_edit    = false;
         $scope.show_create  = false;
         $scope.show_close   = false;
-      
-                                            
-        
+
+
+
 
     //GET the current state
          $scope.name_state   = $state.current.name;
@@ -618,7 +632,7 @@ angular.module('myApp')
             });
         };
 
-        //CLOSE ACTION  
+        //CLOSE ACTION
         $scope.close = function(){
 
             if($scope.name_state!="app.editRes"){
@@ -638,7 +652,7 @@ angular.module('myApp')
                     }else{
                         $state.go('app.closeActions');
                     }
-                    
+
                 });
 
             });
@@ -651,9 +665,9 @@ angular.module('myApp')
             sale.project_price  =action.response.offer_budget;
             sale.project_margin =action.response.offer_margin;
             sale.sales_date     =action.feedback.project_start_date;
-            
+
             clientsService.getClients().get({id:action._client},function(res){
-                
+
                 sale._client= res.company_name;
                 console.log('apunto del post sales');
                 console.log(res);
@@ -662,9 +676,9 @@ angular.module('myApp')
                     console.log(res);
                     $state.go('app.closeActions');
                 });
-                
+
             });
-               
+
         }
 
 
@@ -696,15 +710,15 @@ angular.module('myApp')
                 $scope.action.feedback  ={};
                 $scope.action.feedback.offer_win        ="false";
                 console.log( $scope.action.feedback.offer_win);
-                
+
             }
 
 
             return action;
         }
-            
+
         $scope.getContacts = function(){
-            
+
              clientsService.getClients().get({id:$scope.action._client},function(res){
                 $scope.client=res;
             });
@@ -713,7 +727,7 @@ angular.module('myApp')
             $scope.action.prospection={};
             $scope.action.prospection.contact= contact.name + " " + contact.category+" "+ contact.phone + " " + contact.email;
         };
-                                            
+
     }])
 
     .controller('ClientsController',['$scope','clientsService',function($scope,clientsService){
@@ -739,7 +753,7 @@ angular.module('myApp')
 
         // POST NEW CLIENT
         $scope.createClient = function(){
-            
+
             clientsService.getClients().save($scope.client);
             //update the clien list with the new client
             $scope.returnClients();
@@ -1285,42 +1299,42 @@ angular.module('myApp')
 
     $scope.loggedIn = false;
     $scope.username = '';
-    
+
     if(AuthFactory.isAuthenticated()) {
         $scope.loggedIn = true;
         $scope.username = AuthFactory.getUsername();
     }
-        
+
     $scope.openLogin = function () {
         ngDialog.open({ template: 'views/login.html', scope: $scope, className: 'ngdialog-theme-default', controller:"LoginController" });
     };
-    
+
     $scope.logOut = function() {
        AuthFactory.logout();
         $scope.loggedIn = false;
         $scope.username = '';
     };
-    
+
     $rootScope.$on('login:Successful', function () {
         $scope.loggedIn = AuthFactory.isAuthenticated();
         $scope.username = AuthFactory.getUsername();
     });
-        
+
     $rootScope.$on('registration:Successful', function () {
         $scope.loggedIn = AuthFactory.isAuthenticated();
         $scope.username = AuthFactory.getUsername();
     });
-    
+
     $scope.stateis = function(curstate) {
-       return $state.is(curstate);  
+       return $state.is(curstate);
     };
-    
+
 }])
 
 .controller('LoginController', ['$scope', 'ngDialog', '$localStorage', 'AuthFactory', function ($scope, ngDialog, $localStorage, AuthFactory) {
-    
+
     $scope.loginData = $localStorage.getObject('userinfo','{}');
-    
+
     $scope.doLogin = function() {
         if($scope.rememberMe)
            $localStorage.storeObject('userinfo',$scope.loginData);
@@ -1330,23 +1344,23 @@ angular.module('myApp')
         ngDialog.close();
 
     };
-            
+
     $scope.openRegister = function () {
         ngDialog.open({ template: 'views/register.html', scope: $scope, className: 'ngdialog-theme-default', controller:"RegisterController" });
     };
-    
+
 }])
 
 .controller('RegisterController', ['$scope', 'ngDialog', '$localStorage', 'AuthFactory', function ($scope, ngDialog, $localStorage, AuthFactory) {
-    
+
     $scope.register={};
     $scope.loginData={};
-    
+
     $scope.doRegister = function() {
         console.log('Doing registration', $scope.registration);
 
         AuthFactory.register($scope.registration);
-        
+
         ngDialog.close();
 
     };
@@ -1439,7 +1453,7 @@ angular.module('myApp')
     };
 }])
 
-.factory('AuthFactory', ['$resource', '$http', '$localStorage', '$rootScope', '$window', 'baseURL', 'ngDialog', function($resource, $http, $localStorage, $rootScope, $window, baseURL, ngDialog){
+.factory('AuthFactory', ['$resource', '$http', '$localStorage', '$rootScope', '$window', 'baseURL', 'ngDialog','$state', function($resource, $http, $localStorage, $rootScope, $window, baseURL, ngDialog,$state){
 
     var authFac = {};
     var TOKEN_KEY = 'Token';
@@ -1484,6 +1498,7 @@ angular.module('myApp')
            function(response) {
               storeUserCredentials({username:loginData.username, token: response.token});
               $rootScope.$broadcast('login:Successful');
+              $state.go('app.activeActions');
            },
            function(response){
               isAuthenticated = false;
