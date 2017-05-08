@@ -1391,7 +1391,7 @@ angular.module('myApp')
                     icon:'fa fa-comment-o fa-4x',
                     title:'Define Action',
                     text:'This is the first step of the cycle. You have to describe the action that you have in mind and choose the client that you want to make the action. Also put a dead line for all the cycle.',
-                    collapse:'collapseOne',
+                    collapse:'collapseOne'
                 },
                 {
                     id:1,
