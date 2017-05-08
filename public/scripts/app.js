@@ -461,7 +461,7 @@ angular.module('myApp')
             console.log($scope.action);
             actionsService.getActions().post($scope.action,
                 function(res){
-                  $state.go('app');
+                  $state.go('app.activeActions');
             });
         };
 
@@ -506,10 +506,10 @@ angular.module('myApp')
 
 
 
-    //GET the current state
+        //GET the current state
          $scope.name_state   = $state.current.name;
 
-    //GET the id action with $stateParams
+         //GET the id action with $stateParams
         if(!$stateParams.id)$scope.id=0;
         else $scope.id=$stateParams.id;
 
@@ -518,11 +518,11 @@ angular.module('myApp')
         console.log($stateParams);
 
 
-    //PANELS INFO
+        //PANELS INFO
         var panels =panelService.getPanels();
 
 
-    //SHOW METHODS
+        //SHOW METHODS
         $scope.show = function(){
             $scope.show_act     =false;
             $scope.show_edit    =true;
@@ -550,7 +550,7 @@ angular.module('myApp')
         };
 
 
-    //SEE THE STATE TO CONFIGURE DE PANELS
+      //SEE THE STATE TO CONFIGURE DE PANELS
         if($scope.name_state=="app.editAction")
         {
             $scope.panels           =panels.slice(0,2);
@@ -599,7 +599,7 @@ angular.module('myApp')
 
          }
 
-    //GET operation
+         //GET operation
         actionsService.getActions().get({id:$scope.id},function(res){
                 $scope.action=res;
                 console.log($scope.action);
@@ -609,12 +609,12 @@ angular.module('myApp')
                 console.log($scope.action);
         });
 
-    //PUT operation
+        //PUT operation
         $scope.update = function(){
            actionsService.getActions().update({id:$scope.id},$scope.action);
         };
 
-    //DELET AND POST operations
+        //DELET AND POST operations
         $scope.saveNew = function(){
             actionsService.getActions().delete({id:$scope.id},
             function(){
@@ -859,6 +859,7 @@ angular.module('myApp')
 
                     console.log($scope.id);
                     clientsService.getClients().update({id:$scope.id},$scope.client);
+                    $scope.contact={};
                 }
 
             }
@@ -875,6 +876,8 @@ angular.module('myApp')
             clientsService.getClients().delete({id:$scope.id},function(){
                 clientsService.getClients().save($scope.client,function(res){
                     $scope.client=res;
+                    $scope.contact={};
+
                 });
             });
         };
